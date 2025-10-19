@@ -47,12 +47,13 @@ int main(int argc, char *argv[]) {
             printf("%d\n", mp.hits);
             }
             else if (strcmp(word, "errors") == 0) { // has to  set to STDOUT
-            printf("%d\n", (mp.errors + error));
+            printf("%d\n", error);
             }
             else {
             fprintf(stderr, "error\n");
             error++;
             }
+            fflush(stdout);
         }
         else if (cmd == 'C') {
             if (strcmp(word, "all") != 0) {
