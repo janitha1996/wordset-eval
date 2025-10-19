@@ -17,7 +17,6 @@ struct node {
 struct hashMap {
     int count;
     int hits;
-    int errors;
     struct node **arr;
 };
 
