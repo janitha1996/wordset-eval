@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+import subprocess
+import time
+import sys
+import math
+
+def run_program(program, workload):
+    times = []
+
+    with open(workload, 'r') as file:
+        lines = file.readlines()
+
+
+    proc  = subprocess.Popen([program], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    for line in lines:
+        start = time.perf_counter_ns()
+        proc.stdin.write(line)
+        proc.stdin.flush()
+        end = time.perf_counter_ns()
+        times.append(end - start)
+
+    proc.stdin.close()
+    proc.wait()
+    return times
+
+def geomean(data):
+    return math.exp(sum(math.log(x) for x in data if x > 0) / len(data))
+
+
+def evaluate():
+    if len(sys.argv) > 1:
+        infile = sys.argv[1]
+    workloads = {
+        "I": infile,
+        "Q": infile,
+    }
+
+    programs = {
+        "c" : "./wordset",
+        "sh": "./wordset.sh",
+    }
+
+    csv_content = "program,mode,min,geomean,max"
+    
+    for prog_name, prog_path in programs.items():
+        for mode, infile in workloads.items():
+            times = run_program(prog_path, infile)
+            if not times:  # safety check
+                continue
+            min_t = min(times)
+            max_t = max(times)
+            gm_t = int(geomean(times))
+            csv_content += f"\n{prog_name},{mode},{min_t},{gm_t},{max_t}"
+
+    print(csv_content)
+
+if __name__ == "__main__":
+    evaluate()

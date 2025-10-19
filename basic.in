@@ -1,0 +1,12 @@
+I hello
+I hi
+Q hello
+Q hey
+S count
+S hits
+S errors
+W test.txt
+C all
+S count
+R test.txt
+S count
