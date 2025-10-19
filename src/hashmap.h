@@ -17,7 +17,6 @@ struct node {
 struct hashMap {
     int count;
     int hits;
-    int errors;
     struct node **arr;
 };
 
@@ -27,5 +26,6 @@ unsigned long hashFunction(const char *word);
 void insert(struct hashMap *mp, const char *word);
 int search(struct hashMap *mp, const char *word);
 void clear_all(struct hashMap *mp);
+void freeHashMap(struct hashMap *mp);
 
 #endif // HASHMAP_H

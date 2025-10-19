@@ -32,8 +32,8 @@ def evaluate():
     if len(sys.argv) > 1:
         infile = sys.argv[1]
     workloads = {
-        "I": infile,
-        "Q": infile,
+        "I": "basic.in",
+        "Q": "basic.in",
     }
 
     programs = {
