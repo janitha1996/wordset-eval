@@ -68,3 +68,19 @@ void clear_all(struct hashMap *mp) {
     mp->hits = 0;
     mp->errors = 0;
 }
+
+void freeHashMap(struct hashMap *mp) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        struct node *current = mp->arr[i];
+        while (current) {
+            struct node *tmp = current;
+            current = current->next;
+            free(tmp->word);
+            free(tmp);
+        }
+        mp->arr[i] = NULL;
+    }
+    free(mp->arr);
+    mp->arr = NULL;
+}
+

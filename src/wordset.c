@@ -106,6 +106,7 @@ int main(int argc, char *argv[]) {
             error++;
         }
     }
+    freeHashMap(&mp);
     fclose(file);
     return 0;
 }
