@@ -8,7 +8,7 @@ void initializeHashMap(struct hashMap *mp){
     return;
 }
 
-// Hash function (djb2)
+// Hash function
 unsigned long hashFunction(const char *word){
     unsigned long hash = START_VALUE;
     int c;
@@ -21,22 +21,20 @@ unsigned long hashFunction(const char *word){
 // Insert new word
 void insert(struct hashMap *mp, const char *word){
     unsigned long index = hashFunction(word);
-    struct node *newNode = (struct node*)malloc(sizeof(struct node));
-    newNode->word = strdup(word);
-    newNode->next = mp->arr[index];
-    mp->arr[index] = newNode;
-    mp->count++;
+    struct node *newNode = malloc(sizeof(struct node));
     if (!newNode) {
-    fprintf(stderr, "Memory allocation failed in insert()\n");
-    exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
     newNode->word = strdup(word);
     if (!newNode->word) {
-        fprintf(stderr, "Memory allocation failed for word copy\n");
         free(newNode);
         exit(EXIT_FAILURE);
     }
+    newNode->next = mp->arr[index];
+    mp->arr[index] = newNode;
+    mp->count++;
 }
+
 
 int search(struct hashMap *mp, const char *word){
     unsigned long index = hashFunction(word);
@@ -44,11 +42,11 @@ int search(struct hashMap *mp, const char *word){
     while (current) {
         if (strcmp(current->word, word) == 0) {
             mp->hits++;
-            return 1; // found
+            return 1;
         }
         current = current->next;
     }
-    return 0; // not found
+    return 0; 
 }
 
 void clear_all(struct hashMap *mp) {
