@@ -4,23 +4,30 @@
 #include "hashmap.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        return 1;
-    }
     struct hashMap mp;
     initializeHashMap(&mp);
     int error = 0;
     const char *filename = argv[1];
-    FILE *file = fopen(filename, "r");
+    FILE *file = NULL;
+    if (argc >= 2) {
+    file = fopen(filename, "r");
     if (file == NULL) {
-        fprintf(stderr, "Error: Could not open file %s\n", filename);
+        fprintf(stderr, "error\n");
+        error++;
+        return 1;
+        }
+    } 
+    else {
+        file = stdin;
+    }
+    if (file == NULL) {
         return 1;
     }
     char cmd;
-    // Buffer size set to 225 to accommodate very long words if present in the input file.
-    char word[225];
+    // Buffer size set to 1024 to accommodate very long words
+    char word[1024];
 
-    while (fscanf(file, " %c %s", &cmd, word) != EOF) {
+    while (fscanf(file, " %c %1023s", &cmd, word) != EOF) {
         if (cmd == 'I') {
             if (search(&mp, word)) {
                 printf("ok\n");
@@ -63,7 +70,6 @@ int main(int argc, char *argv[]) {
             }
             clear_all(&mp);
             error = 0;
-            printf("ok\n");
         }
         else if (cmd == 'W') {  // Write to file
             FILE *fptr = fopen(word, "wx");  // fail if file exists
@@ -82,7 +88,6 @@ int main(int argc, char *argv[]) {
                 }
             }
             fclose(fptr);
-            printf("ok\n");
         }
         else if (cmd == 'R') {
             FILE *fptr = fopen(word, "rx");  // fail if file doesn't exist
@@ -92,15 +97,14 @@ int main(int argc, char *argv[]) {
                 continue;
             }
 
-            char buffer[225];
-            while (fscanf(fptr, "%224s", buffer) == 1) {
+            char buffer[1024];
+            while (fscanf(fptr, "%1023s", buffer) == 1) {
                 if (!search(&mp, buffer)) {
                     insert(&mp, buffer);
                 }
             }
 
             fclose(fptr);
-            printf("ok\n");
         }
         else {
             fprintf(stderr, "error\n");
